@@ -6,7 +6,7 @@ using TMPro;
 public class GameManager : MonoBehaviour
 {
     public Transform respawnPosition;
-    public GameObject Player;
+    public GameObject player;
     void Start()
     {
         

@@ -12,35 +12,40 @@ public class UI : MonoBehaviour
     public string reset;
 
     public TextMeshProUGUI scoreText;
+    public int score = 0;
+
     public int maxLife = 3;
     public int currentLife;
     public Image[] lifeSprite;
+
     public float timer = 0f;
-    public float end = 2f;
-    public int score = 0;
 
     public bool isRunnig = true;
     void Start()
     {
+        StartCoroutine(GameTime());
         panel.SetActive(false);
         currentLife = maxLife;
         CurrentLife();
-        ResetScore();
         CurrentScore();
-        StartCoroutine(ResetGame());
-        ResetTime();
     }
     void Update()
     {
-        
+        EndGameTime();
     }
-    private void FixedUpdate()
-    {
-    }
+
+    //Life
     public void RestLife()
     {
-        if (currentLife < 0) return;
         currentLife--;
+        if (currentLife <= 0)
+        {
+            StartCoroutine(ResetGame());
+        }
+        if (currentLife >= 0)
+        {
+            StartCoroutine(Respawn());
+        }
         CurrentLife();
     }
     public void CurrentLife()
@@ -50,19 +55,49 @@ public class UI : MonoBehaviour
             lifeSprite[i].enabled = i < currentLife;
         }
     }
-    /*IEnumerator GameTime()
+    IEnumerator Respawn()
+    {
+        gameManager.player.SetActive(false);
+        yield return new WaitForSeconds(1f);
+        gameManager.player.transform.position = gameManager.respawnPosition.position;
+        gameManager.player.SetActive(true);
+    }
+
+    //Time
+    IEnumerator GameTime()
     {
         while (isRunnig)
         {
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.5f);
             timer++;
-            score++;
             Debug.Log($"{timer}");
         }
-    }*/
-    public void ResetTime()
+    }
+
+    void EndGameTime()
     {
-        timer = 0;
+        if (timer >= 35f)
+        {
+            StartCoroutine(ResetGame());
+        }
+    }
+    IEnumerator ResetGame()
+    {
+        panel.SetActive(true);
+        yield return new WaitForSeconds(3f);
+        ResetTime();
+        ResetScore();
+        sceneController.GameOver(reset);
+    }
+    public void ResetTime()
+        {
+            timer = 0;
+        }
+    //Score
+    public void AddScore(int amount)
+    {
+        score += amount;
+        CurrentScore();
     }
     private void CurrentScore()
     {
@@ -72,19 +107,5 @@ public class UI : MonoBehaviour
     {
         score = 0;
         CurrentScore();
-    }
-    void RestTime()
-    {
-        timer+= Time.deltaTime;
-        if (timer >= 10f)
-        {
-            StartCoroutine(ResetGame());
-        }
-    }
-    IEnumerator ResetGame()
-    {
-        panel.SetActive(true);
-        yield return new WaitForSeconds(2f);
-        sceneController.GameOver(reset);
     }
 }
