@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class SceneController : MonoBehaviour
 {
@@ -11,4 +12,10 @@ public class SceneController : MonoBehaviour
     {
         Application.Quit();
     }
+    public void GameOver(string reset)
+    {
+        SceneManager.LoadScene(reset);
+    }
+
+
 }
