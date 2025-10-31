@@ -15,7 +15,8 @@ public class Enemy : MonoBehaviour
     
     void Start()
     {
-        
+        spawner = FindAnyObjectByType<EnemySpawner>();
+        ui = FindAnyObjectByType<UI>();
     }
     void Update()
     {

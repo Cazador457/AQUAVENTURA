@@ -31,10 +31,13 @@ public class Player : MonoBehaviour
         float moveY = Input.GetAxis("Vertical");
         moveInput = new Vector2(moveX, moveY).normalized;
 
-        if (moveInput != Vector2.zero)
+        if (moveX>0.1f)
         {
-            float angle = Mathf.Atan2(moveInput.y, moveInput.x) * Mathf.Rad2Deg - 90f;
-            transform.rotation = Quaternion.Euler(0, 0, angle);
+            transform.localScale = new Vector3(6, 8, 1);
+        }
+        else if(moveX < -0.1f)
+        {
+            transform.localScale = new Vector3(-6, 8, 1);
         }
     }
     public void Shoot()
@@ -52,6 +55,10 @@ public class Player : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Enemy"))
+        {
+            ui.RestLife();
+        }
+        else if (collision.CompareTag("Wall"))
         {
             ui.RestLife();
         }
